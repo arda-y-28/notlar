@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ağ Temelleri, Protokoller ve Güvenlik Mimarisi - Çalışma Rehberi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="site-header">
+    <div class="header-inner container">
+      <div class="logo">
+        <span class="logo-icon">🌐</span>
+        <div class="logo-text">
+          <h1>NetMaster</h1>
+          <span>Ağ & Güvenlik Ders Notları</span>
+        </div>
+      </div>
+      
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Konu, protokol veya kavram ara... (Örn: OSI, Hub, Fiber)">
+      </div>
+
+      <div class="header-actions">
+        <button id="themeToggle" class="btn-icon" title="Temayı Değiştir">🌙</button>
+        <button id="printBtn" class="btn-icon" title="Yazdır / PDF Olarak Kaydet">🖨️</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="reading-progress-bar" id="progressBar"></div>
+
+  <div class="main-wrapper container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <nav class="toc-nav">
+        <div class="toc-title">İÇİNDEKİLER</div>
+        <ul class="toc-list">
+          <li>
+            <a href="#bolum1" class="toc-link active">
+              <span class="toc-badge">01</span>
+              Ağ Kavramları & Modeller
+            </a>
+            <ul class="toc-sub">
+              <li><a href="#bolum1-1">1. İstemci-Sunucu & İletişim</a></li>
+              <li><a href="#bolum1-2">2. Protokol Hiyerarşisi</a></li>
+              <li><a href="#bolum1-3">3. OSI Referans Modeli (7 Katman)</a></li>
+              <li><a href="#bolum1-4">4. Hizmetler & Protokol İlişkisi</a></li>
+              <li><a href="#bolum1-5">5. Standartlar (De Facto / Jure)</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#bolum2" class="toc-link">
+              <span class="toc-badge">02</span>
+              Ağ Güvenliği (ISO 7498-2)
+            </a>
+            <ul class="toc-sub">
+              <li><a href="#bolum2-1">1. Güvenlik Yaşam Döngüsü</a></li>
+              <li><a href="#bolum2-2">2. Temel Tehditler</a></li>
+              <li><a href="#bolum2-3">3. Güvenlik Hizmetleri (5 Hizmet)</a></li>
+              <li><a href="#bolum2-4">4. Güvenlik Mekanizmaları</a></li>
+              <li><a href="#bolum2-5">5. Katman Dağılımı [KRİTİK]</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#bolum3" class="toc-link">
+              <span class="toc-badge">03</span>
+              TCP/IP & Ethernet
+            </a>
+            <ul class="toc-sub">
+              <li><a href="#bolum3-1">TCP/IP Katmanları & Protokoller</a></li>
+              <li><a href="#bolum3-2">Ethernet, CSMA/CD, MAC & Frame</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#bolum4" class="toc-link">
+              <span class="toc-badge">04</span>
+              Fiziksel İletim & Kablolama
+            </a>
+            <ul class="toc-sub">
+              <li><a href="#bolum4-1">1. Fiziksel Altyapı Riskleri</a></li>
+              <li><a href="#bolum4-2">2. Kablolama Türleri & Hub Zafiyeti</a></li>
+              <li><a href="#bolum4-3">3. Fiber Optik, Modlar & CWDM</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#sinav-ozeti" class="toc-link highlight-link">
+              <span class="toc-badge">⚡</span>
+              Hızlı Sınav Kontrol Listesi
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content-area">
+      <!-- Hero Banner -->
+      <section class="hero-card">
+        <div class="hero-tag">DERS ÇALIŞMA PORTALI</div>
+        <h2>Ağ Kavramları, Protokol Hiyerarşisi, Güvenlik ve İletim Ortamları</h2>
+        <p>Aşağıda yer alan ders notları ve sınav odaklı özetler; ISO referans modelleri, güvenlik yaşam döngüsü, TCP/IP protokol kümesi ve iletim ortamlarının derinlemesine analizini sunar.</p>
+        <div class="hero-stats">
+          <div class="stat-item"><span class="stat-num">4</span> Ana Bölüm</div>
+          <div class="stat-item"><span class="stat-num">7</span> OSI Katmanı</div>
+          <div class="stat-item"><span class="stat-num">5</span> Temel Güvenlik Hizmeti</div>
+          <div class="stat-item"><span class="stat-num">100%</span> Sınav Uyumlu</div>
+        </div>
+      </section>
+
+      <!-- ==================== BÖLÜM 1 ==================== -->
+      <section id="bolum1" class="content-section">
+        <div class="section-header">
+          <span class="section-number">BÖLÜM 01</span>
+          <h2>Ağ Kavramları, Protokol Hiyerarşisi ve Modeller</h2>
+        </div>
+
+        <!-- 1.1 -->
+        <article id="bolum1-1" class="topic-block">
+          <h3>1. İnternet Protokolleri ve İletişim Mantığı</h3>
+          
+          <div class="grid-2">
+            <div class="card card-glow">
+              <div class="card-icon">💻 ⇄ 🖥️</div>
+              <h4>İstemci-Sunucu (Client-Server) Etkileşimi</h4>
+              <p>İnternet üzerindeki standart bir iletişimde kullanıcı tarafında hizmet talep eden bir <strong>istemci (Client - örn. Web Tarayıcısı)</strong>, karşı tarafta ise gelen isteklere yanıt veren bir <strong>sunucu (Server - Web Server)</strong> yer alır.</p>
+            </div>
+            <div class="card card-glow">
+              <div class="card-icon">📦 ⤓ 🔌</div>
+              <h4>Mesaj Akışı ve Kapsülleme</h4>
+              <p>Tarayıcı bir veri talep ettiğinde uygulama katmanında protokol işletilir:</p>
+              <code>GET /dizin/sayfa.html HTTP/1.1<br>Host: www.site.com</code>
+              <p class="mt-sm">Bu mesaj doğrudan kabloya verilemez; sırasıyla alt katmanlara indirilerek paketlenir ve sarmalanır (Encapsulation).</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 1.2 -->
+        <article id="bolum1-2" class="topic-block">
+          <h3>2. Protokol Hiyerarşisi ve Katmanlama Prensipleri</h3>
+          <p>Ağ sistemlerinin yüksek karmaşıklığını yönetmek amacıyla <strong>katmanlı mimari (layering)</strong> kullanılır.</p>
+
+          <div class="features-list">
+            <div class="feature-item">
+              <strong>Katman (Layer) Mantığı:</strong> Protokoller dikey olarak üst üste dizilir. Her katman bir üstündeki katmana belirli hizmetler (services) sunar ve o katmanın alt katmanın ayrıntılarını bilmesini engeller (<strong>bilgi gizleme - information hiding</strong>).
+            </div>
+            <div class="feature-item">
+              <strong>Eş Süreçler (Peer Entities / Peer Processes):</strong> İki farklı cihazdaki aynı seviyede bulunan katmanlar (örneğin A cihazının Taşıma katmanı ile B cihazının Taşıma katmanı) birbirlerinin <em>"eş"</em>idir.
+            </div>
+          </div>
+
+          <!-- Sanal vs Gerçek İletişim Karşılaştırma Tablosu -->
+          <div class="interactive-diagram-box">
+            <h4>Yatay (Sanal) vs. Dikey (Gerçek) İletişim</h4>
+            <div class="diagram-grid">
+              <div class="diag-card virtual">
+                <h5>🌐 Sanal İletişim (Virtual Comms)</h5>
+                <p>Eş katmanlar birbirleriyle <strong>yatay olarak doğrudan</strong> haberleştiğini varsayar.</p>
+                <div class="pill pill-blue">Yöneten Kural: <strong>Protokol (Protocol)</strong></div>
+                <small class="text-muted">Mantıksal iletişimdir; verinin yatayda doğrudan zıpladığı kabul edilir.</small>
+              </div>
+              <div class="diag-arrow">⇄</div>
+              <div class="diag-card actual">
+                <h5>⚡ Gerçek İletişim (Actual Comms)</h5>
+                <p>Verinin hiçbir katmandan karşıya doğrudan atlaması mümkün değildir. Veri daima <strong>dikey</strong> olarak arayüzlerden alt katmana iner.</p>
+                <div class="pill pill-green">Yöneten Yapı: <strong>Arayüz (Interface)</strong></div>
+                <small class="text-muted">Kabloya ulaşır, karşı cihaza geçer ve alıcıda tekrar yukarı katmanlara tırmanır.</small>
+              </div>
+            </div>
+            <div class="note-box mt-md">
+              <strong>💡 Temiz Arayüz Tasarımı (Clean Interfaces):</strong> İyi bir ağ mimarisi, katmanlar arasında temiz arayüzler tanımlar; bu sayede bir katmandaki teknoloji değiştiğinde (örneğin bakır kablodan fiber optiğe geçildiğinde) üstteki katmanlar bundan kesinlikle etkilenmez.
+            </div>
+          </div>
+        </article>
+
+        <!-- 1.3 -->
+        <article id="bolum1-3" class="topic-block">
+          <h3>3. OSI Referans Modeli (ISO 7498)</h3>
+          <p>Uluslararası Standardizasyon Örgütü (ISO) tarafından geliştirilen ve açık sistemlerin birbiriyle konuşmasını sağlayan 7 katmanlı modeldir:</p>
+
+          <div class="osi-stack-container">
+            <!-- Katman 7 -->
+            <div class="osi-card layer-app" data-layer="7">
+              <div class="osi-header">
+                <span class="osi-badge">Katman 7</span>
+                <span class="osi-name">Uygulama Katmanı (Application Layer)</span>
+                <span class="osi-group top">Üst Katman</span>
+              </div>
+              <p class="osi-desc">Kullanıcının ve yazılımların doğrudan ihtiyaç duyduğu protokollere ev sahipliği yapar (HTTP, FTP, SMTP, DNS, SSH, sanal terminal, dizin hizmetleri).</p>
+            </div>
+
+            <!-- Katman 6 -->
+            <div class="osi-card layer-pres" data-layer="6">
+              <div class="osi-header">
+                <span class="osi-badge">Katman 6</span>
+                <span class="osi-name">Sunum Katmanı (Presentation Layer)</span>
+                <span class="osi-group top">Üst Katman</span>
+              </div>
+              <p class="osi-desc">İletilen verinin gösterimi ve sözdizimi (syntax) ile ilgilenir. Farklı işletim sistemleri arasındaki karakter/sayı gösterim farklarını çözer. <strong>Veri sıkıştırma (compression)</strong> ve <strong>şifreleme (encryption)</strong> bu katmanda ele alınır.</p>
+            </div>
+
+            <!-- Katman 5 -->
+            <div class="osi-card layer-sess" data-layer="5">
+              <div class="osi-header">
+                <span class="osi-badge">Katman 5</span>
+                <span class="osi-name">Oturum Katmanı (Session Layer)</span>
+                <span class="osi-group top">Üst Katman</span>
+              </div>
+              <p class="osi-desc">Farklı makinelerdeki kullanıcılar arasında oturum (session) kurulmasını, yönetilmesini ve sonlandırılmasını sağlar. Uzaktan oturum açma, dosya aktarımı, diyalog kontrolü (dialogue control), jeton yönetimi (token management) ve senkronizasyon (checkpoints) yürütür.</p>
+            </div>
+
+            <!-- Katman 4 -->
+            <div class="osi-card layer-trans" data-layer="4">
+              <div class="osi-header">
+                <span class="osi-badge">Katman 4</span>
+                <span class="osi-name">Taşıma Katmanı (Transport Layer)</span>
+                <span class="osi-group bottom">Alt Katman</span>
+              </div>
+              <p class="osi-desc">Oturum katmanından aldığı veriyi daha küçük parçalara (segment/packet) böler, karşı tarafa eksiksiz ve sıralı ulaştığından emin olur. <strong>Uçtan uca (end-to-end)</strong> veri akışının türünü ve kalitesini belirler (TCP, UDP).</p>
+            </div>
+
+            <!-- Katman 3 -->
+            <div class="osi-card layer-net" data-layer="3">
+              <div class="osi-header">
+                <span class="osi-badge">Katman 3</span>
+                <span class="osi-name">Ağ Katmanı (Network Layer)</span>
+                <span class="osi-group bottom">Alt Katman</span>
+              </div>
+              <p class="osi-desc">Alt ağın (subnet) kontrolünü sağlar. En temel görevi <strong>yönlendirme (routing)</strong> yapmaktır; paketlerin kaynaktan hedefe hangi yolla gideceğini (statik, dinamik) belirler, mantıksal adresleme (IP) ve tıkanıklık kontrolü (congestion control) yapar.</p>
+            </div>
+
+            <!-- Katman 2 -->
+            <div class="osi-card layer-data" data-layer="2">
+              <div class="osi-header">
+                <span class="osi-badge">Katman 2</span>
+                <span class="osi-name">Veri Bağı Katmanı (Data Link Layer)</span>
+                <span class="osi-group bottom">Alt Katman</span>
+              </div>
+              <p class="osi-desc">Katman 1'in sunduğu ham iletim hattını hatasız, güvenilir bir hatta dönüştürür. Veriyi çerçevelere (frames) böler, çerçeve sınırlarını belirler, onay mekanizmaları (ACK) ve çerçeve tekrar iletimi ile hata kontrolü (CRC) yapar. Fiziksel adresleme (MAC) buradadır.</p>
+            </div>
+
+            <!-- Katman 1 -->
+            <div class="osi-card layer-phys" data-layer="1">
+              <div class="osi-header">
+                <span class="osi-badge">Katman 1</span>
+                <span class="osi-name">Fiziksel Katman (Physical Layer)</span>
+                <span class="osi-group bottom">Alt Katman</span>
+              </div>
+              <p class="osi-desc">İletişim kanalı üzerinden <strong>ham bitlerin (raw bits - 0 ve 1)</strong> aktarılmasından sorumludur. Voltaj seviyeleri, bit süreleri, konnektör standartları ve iletişimin tek yönlü (simplex) mü yoksa çift yönlü (duplex) mü olduğunu belirler.</p>
+            </div>
+          </div>
+
+          <div class="callout callout-info mt-md">
+            <strong>Alt ve Üst Katman Ayrımı Kuralı:</strong>
+            <ul>
+              <li><strong>Alt Katmanlar (1 - 4):</strong> Doğrudan iletişim teknolojisi ve verinin güvenli/doğru taşınmasıyla ilgilidir.</li>
+              <li><strong>Üst Katmanlar (5 - 7):</strong> Doğrudan kullanıcı deneyimi, veri formatı ve uygulama süreçlerine odaklıdır.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- 1.4 -->
+        <article id="bolum1-4" class="topic-block">
+          <h3>4. OSI Modelinde Hizmetler ve Protokol İlişkisi</h3>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Kavram</th>
+                  <th>Tanım & Açıklama</th>
+                  <th>Örnek / Not</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Hizmet (Service)</strong></td>
+                  <td>Bir katmanın bir üstündeki katmana sunduğu işlemler kümesidir. <em>Ne yapacağını söyler ama nasıl yapılacağını belirtmez.</em></td>
+                  <td>Üst katmana sunulan soyut API</td>
+                </tr>
+                <tr>
+                  <td><strong>SAP (Service Access Point)</strong></td>
+                  <td>İki komşu katmanın haberleştiği mantıksal arayüz erişim noktasıdır.</td>
+                  <td>Port veya mantıksal soket mantığı</td>
+                </tr>
+                <tr>
+                  <td><strong>SDU (Service Data Unit)</strong></td>
+                  <td>Üst katmandan gelen, henüz mevcut katmanın başlığı (header) eklenmemiş ham veri birimidir.</td>
+                  <td>İşlenmeyi bekleyen yük (Payload)</td>
+                </tr>
+                <tr>
+                  <td><strong>PDU (Protocol Data Unit)</strong></td>
+                  <td>SDU'ya ilgili katmanın kendi başlığını (header) eklemesiyle oluşan tam paket: <code>PDU = Header + SDU</code></td>
+                  <td>Segment, Paket, Frame</td>
+                </tr>
+                <tr>
+                  <td><strong>Bağlantı Odaklı (Connection-Oriented)</strong></td>
+                  <td>Telefon sistemi gibidir. Önce bağlantı kurulur (handshake), veri eksiksiz iletilir, sonra bağlantı kapatılır.</td>
+                  <td>TCP Protokolü</td>
+                </tr>
+                <tr>
+                  <td><strong>Bağlantısız (Connectionless)</strong></td>
+                  <td>Posta sistemi gibidir. Her paket hedef adresi taşır ve birbirinden bağımsız yollardan hedefe iletilir.</td>
+                  <td>UDP, IP Protokolü</td>
+                </tr>
+                <tr>
+                  <td><strong>Güvenilirlik (Reliability)</strong></td>
+                  <td>Asla veri kaybetmez ve bozmaz; ancak gecikme ve ek yükü fazladır. Dosya aktarımı güvenilirlik isterken, ses/video yayını genellikle katı güvenilirlik istemez.</td>
+                  <td>Onay (ACK) ve Tekrar İletim</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- 1.5 -->
+        <article id="bolum1-5" class="topic-block">
+          <h3>5. Ağ Standartları ve Örnek Ağlar</h3>
+          <div class="grid-2">
+            <div class="card">
+              <h4>De Facto vs. De Jure Standartlar</h4>
+              <ul class="clean-list">
+                <li><span class="badge badge-purple">De Facto:</span> Resmi bir kurum kararı olmadan piyasada kendiliğinden fiili kabul gören standartlar (Örn: <strong>TCP/IP</strong>).</li>
+                <li><span class="badge badge-blue">De Jure:</span> Resmi standart kuruluşları tarafından onaylanan yasal standartlar (Örn: <strong>OSI modelleri</strong>).</li>
+                <li><strong>Önemli Kuruluşlar:</strong> ISO, IEEE, IETF, NIST, ECMA.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h4>Önemli Ağ Teknolojileri</h4>
+              <ul class="clean-list">
+                <li><strong>LAN (IEEE 802):</strong> Katman 1 ve 2'yi kapsar. IEEE 802.2 (LLC - Veri Bağı), IEEE 802.3 (Ethernet).</li>
+                <li><strong>ISDN:</strong> Telefon şebekesinden ses ve veriyi 64 kbit/s kanallarla dijital taşıyan sistem.</li>
+                <li><strong>ADSL & Kablo Modem:</strong> Bakır telefon hattından yüksek hızlı asimetrik indirme sağlayan ADSL ve koaksiyel TV hattını kullanan kablo modem sistemleri.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ==================== BÖLÜM 2 ==================== -->
+      <section id="bolum2" class="content-section">
+        <div class="section-header">
+          <span class="section-number">BÖLÜM 02</span>
+          <h2>Ağ Güvenliği ve Güvenlik Mimarisi (ISO 7498-2)</h2>
+        </div>
+
+        <!-- 2.1 -->
+        <article id="bolum2-1" class="topic-block">
+          <h3>1. Güvenlik Yaşam Döngüsü (Security Life-cycle)</h3>
+          <p>Bir ağda güvenlik rastgele kurulmaz; ISO 7498-2 standardına göre doğrusal ve döngüsel bir sırayla ilerler:</p>
+          
+          <div class="lifecycle-stepper">
+            <div class="step-card">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <h5>Politika Tanımlama</h5>
+                <p>Kurumun güvenlik politikasını net olarak tanımla.</p>
+              </div>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-card">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <h5>Tehdit Analizi</h5>
+                <p>Politikaya göre oluşabilecek tehditleri tespit et.</p>
+              </div>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-card">
+              <div class="step-num">3</div>
+              <div class="step-body">
+                <h5>Hizmet Belirleme</h5>
+                <p>Tehditleri karşılayacak güvenlik hizmetlerini belirle.</p>
+              </div>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-card">
+              <div class="step-num">4</div>
+              <div class="step-body">
+                <h5>Mekanizma Kurulumu</h5>
+                <p>Hizmetleri sağlayacak araç ve mekanizmaları kur.</p>
+              </div>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step-card">
+              <div class="step-num">5</div>
+              <div class="step-body">
+                <h5>Sürekli Yönetim</h5>
+                <p>Denetim ve izleme ile sürekli güvenliği sağla.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2.2 -->
+        <article id="bolum2-2" class="topic-block">
+          <h3>2. Temel Tehditler (Threats)</h3>
+          <div class="threat-definition-box">
+            <strong>Tanım:</strong> Bir varlığa (Gizlilik, Bütünlük, Kullanılabilirlik - CIA) zarar verme potansiyeli olan kişi, olay veya fikir.
+          </div>
+
+          <div class="grid-2 mt-md">
+            <div class="card card-danger">
+              <h4>🚨 Dört Temel Tehdit</h4>
+              <ul class="danger-list">
+                <li><strong>Bilgi Sızıntısı (Information Leakage):</strong> Gizliliğin bozulması, verinin ifşa olması.</li>
+                <li><strong>Bütünlük İhlali (Integrity Violation):</strong> Verinin izinsiz değiştirilmesi veya bozulması.</li>
+                <li><strong>Hizmet Engelleme (Denial of Service - DoS):</strong> Sistemin yasal kullanıcılara erişilemez kılınması.</li>
+                <li><strong>Yetkisiz/Gayrimeşru Kullanım (Illegitimate Use):</strong> Kaynakların yetkisiz kişilerce tüketilmesi veya kullanılması.</li>
+              </ul>
+            </div>
+            <div class="card card-warning">
+              <h4>⚠️ Tehditleri Sağlayan İkincil Araçlar</h4>
+              <ul class="warning-list">
+                <li><strong>Maskeleme (Masquerade):</strong> Saldırganın yetkili bir kullanıcı gibi davranması.</li>
+                <li><strong>Denetimleri Atlatma (Bypassing Controls):</strong> Güvenlik kapılarının arkasından dolaşma.</li>
+                <li><strong>Yetki Aşımı:</strong> Mevcut düşük yetkinin yükseltilmesi.</li>
+                <li><strong>Truva Atı (Trojan Horse):</strong> Zararsız görünen zararlı yazılımlar.</li>
+                <li><strong>Tuzak Kapılar (Trapdoors / Backdoors):</strong> Sisteme gizli giriş noktaları bırakılması.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2.3 -->
+        <article id="bolum2-3" class="topic-block">
+          <h3>3. Güvenlik Hizmetleri (Security Services)</h3>
+          <p>ISO 7498-2 standardı <strong>5 temel güvenlik hizmeti</strong> tanımlar:</p>
+
+          <div class="services-grid">
+            <div class="service-box">
+              <div class="service-badge">Hizmet 1</div>
+              <h4>Kimlik Doğrulama (Authentication)</h4>
+              <p><strong>• Varlık Doğrulama (Entity Authentication):</strong> İletişim anında karşıdaki cihazın/kullanıcının kimliğini teyit eder (maskeleme ve tekrar saldırılarına karşı korur).<br>
+              <strong>• Veri Kaynağı Doğrulama (Origin Authentication):</strong> Gelen veriyi gerçekten iddia edilen kaynağın gönderdiğini doğrular.</p>
+            </div>
+
+            <div class="service-box">
+              <div class="service-badge">Hizmet 2</div>
+              <h4>Erişim Denetimi (Access Control)</h4>
+              <p>Yetkisiz kişilerin ağ kaynaklarına, dosyalara veya sunuculara erişmesini ve kullanmasını engeller.</p>
+            </div>
+
+            <div class="service-box">
+              <div class="service-badge">Hizmet 3</div>
+              <h4>Veri Gizliliği (Data Confidentiality)</h4>
+              <p>Bilginin izinsiz açığa çıkmasını önler. 4 alt dala ayrılır:<br>
+              1. Bağlantı Gizliliği &nbsp;|&nbsp; 2. Bağlantısız Gizlilik<br>
+              3. Seçici Alan Gizliliği &nbsp;|&nbsp; 4. Trafik Akış Gizliliği</p>
+            </div>
+
+            <div class="service-box">
+              <div class="service-badge">Hizmet 4</div>
+              <h4>Veri Bütünlüğü (Data Integrity)</h4>
+              <p>Verinin yolda değiştirilmesini, silinmesini, araya sahte veri eklenmesini veya sırasının bozulmasını engeller ve tespit eder.</p>
+            </div>
+
+            <div class="service-box full-width">
+              <div class="service-badge">Hizmet 5</div>
+              <h4>İnkar Edememe (Non-repudiation)</h4>
+              <p>Gönderenin veriyi gönderdiğini (<em>origin</em>) veya alıcının veriyi teslim aldığını (<em>delivery</em>) sonradan inkar etmesini hukuki ve teknik olarak kesin kanıtlarla önler.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2.4 -->
+        <article id="bolum2-4" class="topic-block">
+          <h3>4. Güvenlik Mekanizmaları (Security Mechanisms)</h3>
+          <p>Güvenlik hizmetlerini gerçeğe dönüştüren somut araçlar iki ana sınıfa ayrılır:</p>
+
+          <div class="grid-2">
+            <div class="card">
+              <h4 class="text-accent">🔧 Özel Güvenlik Mekanizmaları</h4>
+              <p class="text-muted mb-sm">Belirli güvenlik hizmetlerini doğrudan karşılamak için uygulanan araçlar:</p>
+              <ul class="pill-list">
+                <li>Şifreleme (Encipherment)</li>
+                <li>Sayısal İmza (Digital Signature)</li>
+                <li>Erişim Denetim Mekanizmaları</li>
+                <li>Veri Bütünlüğü Mekanizmaları</li>
+                <li>Kimlik Doğrulama Değişimleri</li>
+                <li>Trafik Doldurma (Traffic Padding)</li>
+                <li>Yönlendirme Denetimi (Routing Control)</li>
+                <li>Noterlik (Notarisation)</li>
+              </ul>
+              <small class="note-tip">💡 <strong>Trafik Doldurma:</strong> Trafik analizini engellemek için hatta sahte veriler basarak gerçek iletim hacmini gizleme taktiğidir.</small>
+            </div>
+
+            <div class="card">
+              <h4 class="text-accent">🌐 Kapsamlı (Pervasive) Mekanizmalar</h4>
+              <p class="text-muted mb-sm">Sistemin geneline yayılan ve tüm hizmetleri destekleyen mimari mekanizmalar:</p>
+              <ul class="pill-list">
+                <li>Güvenilir İşlevsellik (Trusted Functionality)</li>
+                <li>Güvenlik Etiketleri (Security Labels)</li>
+                <li>Olay Algılama (Alarmlar & Tehdit Tespiti)</li>
+                <li>Denetim İzi (Audit Trail - Güvenlik Günlükleri)</li>
+                <li>Güvenlik Kurtarma (Security Recovery)</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2.5 -->
+        <article id="bolum2-5" class="topic-block highlight-section">
+          <div class="exam-header">
+            <span class="exam-icon">🎯</span>
+            <div>
+              <h3>5. Güvenlik Hizmetlerinin Katmanlara Dağılımı</h3>
+              <p class="exam-subtitle">ÇOK ÖNEMLİ SINAV KURALI! ISO 7498-2'ye göre her güvenlik hizmeti her katmanda sunulamaz.</p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="exam-matrix-table">
+              <thead>
+                <tr>
+                  <th>Katman</th>
+                  <th>Sağlanabilen Güvenlik Hizmetleri</th>
+                  <th>Sağlanamayanlar & Kritik Sınav Notu</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="row-phys">
+                  <td><strong>Katman 1<br>(Fiziksel)</strong></td>
+                  <td>
+                    <span class="tag tag-success">Bağlantı Gizliliği</span>
+                    <span class="tag tag-success">Trafik Akış Gizliliği</span>
+                  </td>
+                  <td><strong class="text-danger">KİMLİK DOĞRULAMA VEYA BÜTÜNLÜK YOKTUR!</strong> Fiziksel katman sadece ham elektrik/ışık iletir, mantıksal doğrulama yapamaz.</td>
+                </tr>
+                <tr class="row-data">
+                  <td><strong>Katman 2<br>(Veri Bağı)</strong></td>
+                  <td>
+                    <span class="tag tag-success">Bağlantı Gizliliği</span>
+                    <span class="tag tag-success">Bağlantısız Gizlilik</span>
+                  </td>
+                  <td>Sınırlı güvenlik; uçtan uca koruma sağlamaz.</td>
+                </tr>
+                <tr class="row-net">
+                  <td><strong>Katman 3<br>(Ağ)</strong></td>
+                  <td>
+                    <span class="tag tag-success">Gizlilik</span>
+                    <span class="tag tag-success">Bütünlük</span>
+                    <span class="tag tag-success">Kimlik Doğrulama</span>
+                  </td>
+                  <td>IPsec gibi mekanizmalarla paket düzeyinde güvenlik sağlanabilir.</td>
+                </tr>
+                <tr class="row-trans">
+                  <td><strong>Katman 4<br>(Taşıma)</strong></td>
+                  <td>
+                    <span class="tag tag-success">Gizlilik</span>
+                    <span class="tag tag-success">Bütünlük</span>
+                    <span class="tag tag-success">Kimlik Doğrulama</span>
+                  </td>
+                  <td>Uçtan uca oturum koruması (Örn: TLS/SSL mantığı).</td>
+                </tr>
+                <tr class="row-app">
+                  <td><strong>Katman 7<br>(Uygulama)</strong></td>
+                  <td>
+                    <span class="tag tag-gold">TÜM GÜVENLİK HİZMETLERİ</span>
+                  </td>
+                  <td><strong>Tüm hizmetlerin (İnkar Edememe, Bütünlük, Gizlilik, Erişim Denetimi, Kimlik Doğrulama) eksiksiz verilebildiği katmandır.</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <!-- ==================== BÖLÜM 3 ==================== -->
+      <section id="bolum3" class="content-section">
+        <div class="section-header">
+          <span class="section-number">BÖLÜM 03</span>
+          <h2>TCP/IP Protokol Ailesi ve Ethernet Temelleri</h2>
+        </div>
+
+        <article id="bolum3-1" class="topic-block">
+          <h3>TCP/IP Katmanları ve Protokolleri</h3>
+          <div class="tcp-grid">
+            <div class="tcp-card">
+              <span class="tcp-layer">Katman 4</span>
+              <h4>Uygulama (Application)</h4>
+              <div class="proto-badges">
+                <span>HTTP</span><span>FTP</span><span>TFTP</span><span>DNS</span><span>SMTP</span><span>Telnet</span>
+              </div>
+              <p>Kullanıcı servisleri ve veri transferi komutları burada yürütülür.</p>
+            </div>
+            
+            <div class="tcp-card">
+              <span class="tcp-layer">Katman 3</span>
+              <h4>Taşıma (Transport)</h4>
+              <div class="proto-badges">
+                <span class="badge-blue">TCP</span><span class="badge-amber">UDP</span>
+              </div>
+              <p><strong>TCP:</strong> Bağlantı odaklı, güvenilir sanal devre kurar, port kavramı vardır.<br><strong>UDP:</strong> Bağlantısız, hafif, onay beklemez, hızlı ve güvenilmezdir.</p>
+            </div>
+
+            <div class="tcp-card">
+              <span class="tcp-layer">Katman 2</span>
+              <h4>İnternet (Internet)</h4>
+              <div class="proto-badges">
+                <span>IP</span><span>ICMP</span><span>IGMP</span>
+              </div>
+              <p>Mantıksal adresleme (IP adresi), paketlerin paketlenmesi ve farklı ağlar arasında yönlendirilmesini sağlar.</p>
+            </div>
+
+            <div class="tcp-card">
+              <span class="tcp-layer">Katman 1</span>
+              <h4>Ağ Arayüzü / Donanım</h4>
+              <div class="proto-badges">
+                <span>Ethernet</span><span>ARP</span><span>Donanım Sürücüleri</span>
+              </div>
+              <p>Fiziksel ve veri bağı katmanlarının birleşimidir. <strong>ARP</strong> ile IP adresleri fiziksel MAC adreslerine eşlenir.</p>
+            </div>
+          </div>
+        </article>
+
+        <article id="bolum3-2" class="topic-block">
+          <h3>Ethernet (IEEE 802.3), MAC Adresi ve Frame Yapısı</h3>
+          
+          <div class="grid-2">
+            <div class="card">
+              <h4>CSMA/CD Prensibi (Taşıyıcı Dinleme & Çarpışma Algılama)</h4>
+              <ol class="step-process">
+                <li><strong>CS (Carrier Sense):</strong> Hattı dinle; hatta sinyal/iletim var mı?</li>
+                <li><strong>MA (Multiple Access):</strong> Hat boşsa, birden çok cihaz hatta aynı anda erişmeye çalışabilir.</li>
+                <li><strong>CD (Collision Detection):</strong> Çarpışma meydana gelirse anında algıla, iletimi kes, rastgele bekleme süresi (backoff) verip tekrar dene.</li>
+              </ol>
+            </div>
+            <div class="card">
+              <h4>MAC Adresi Mimarisi (48 Bit / 6 Bayt)</h4>
+              <div class="mac-visual">
+                <div class="mac-part oui">
+                  <span class="mac-bits">İlk 24 Bit</span>
+                  <strong>OUI (Vendor)</strong>
+                  <small>Üretici Firma Kodu</small>
+                </div>
+                <div class="mac-part nic">
+                  <span class="mac-bits">Son 24 Bit</span>
+                  <strong>Cihaz Seri No</strong>
+                  <small>Kartın Benzersiz Kimliği</small>
+                </div>
+              </div>
+              <p class="text-sm mt-sm">Ağ kartına üretici tarafından kazınmış benzersiz fiziksel donanım adresidir.</p>
+            </div>
+          </div>
+
+          <!-- Ethernet Frame Anatomisi -->
+          <div class="frame-structure-box mt-md">
+            <h4>Ethernet Çerçevesi (Frame) Alanları</h4>
+            <div class="frame-blocks">
+              <div class="f-block" style="flex: 2;">
+                <span class="f-title">Hedef MAC</span>
+                <span class="f-size">48 Bit (6 Bayt)</span>
+              </div>
+              <div class="f-block" style="flex: 2;">
+                <span class="f-title">Kaynak MAC</span>
+                <span class="f-size">48 Bit (6 Bayt)</span>
+              </div>
+              <div class="f-block" style="flex: 1.5;">
+                <span class="f-title">Tip (Type)</span>
+                <span class="f-size">2 Bayt</span>
+              </div>
+              <div class="f-block f-data" style="flex: 6;">
+                <span class="f-title">Veri (Payload)</span>
+                <span class="f-size">En Az 46 - En Çok 1500 Bayt</span>
+              </div>
+              <div class="f-block f-crc" style="flex: 2;">
+                <span class="f-title">CRC (Hata Denetimi)</span>
+                <span class="f-size">4 Bayt</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ==================== BÖLÜM 4 ==================== -->
+      <section id="bolum4" class="content-section">
+        <div class="section-header">
+          <span class="section-number">BÖLÜM 04</span>
+          <h2>Fiziksel İletim Ortamları ve Kablolama (Katman 1)</h2>
+        </div>
+
+        <!-- 4.1 -->
+        <article id="bolum4-1" class="topic-block">
+          <h3>1. Fiziksel Altyapı Riskleri (Cabling & Physical Issues)</h3>
+          <p>Bir ağın güvenliği kabloların geçtiği fiziksel ortamın korunmasıyla başlar:</p>
+          <div class="grid-3">
+            <div class="card">
+              <h5>🏢 Fiziksel Alanlar</h5>
+              <p>Kablo kanalları (trunking), dikey kablo geçiş bacaları (risers) ve ağ odaları / dolapları (network closets).</p>
+            </div>
+            <div class="card">
+              <h5>⚠️ Zafiyet Noktaları</h5>
+              <p>Kabloların halka açık koridorlardan geçmesi, bina giriş-çıkış kontrollerinin yetersizliği ve altyapının kilit altında olmaması.</p>
+            </div>
+            <div class="card">
+              <h5>🧲 Çevresel Riskler</h5>
+              <p>Ortamdaki güçlü elektromanyetik parazitler (EMI) ve kablonun fiziksel olarak kolayca kesilip dinlemeye açık olması.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4.2 -->
+        <article id="bolum4-2" class="topic-block">
+          <h3>2. Kablolama Türlerinin Karşılaştırmalı Detayları</h3>
+          
+          <div class="cables-grid">
+            <!-- Kalın Ethernet -->
+            <div class="cable-card">
+              <div class="cable-header">
+                <span class="cable-title">Kalın Ethernet (10BASE-5)</span>
+                <span class="cable-badge">Thick Coax</span>
+              </div>
+              <ul class="cable-features">
+                <li><strong>Hız:</strong> 10 Mbps</li>
+                <li><strong>Maksimum Segment:</strong> 500 Metre (adındaki <em>5</em> buradan gelir)</li>
+                <li><strong>Yapı:</strong> Kalın ve sert koaksiyel kablodur; eski Ethernet omurga standardıdır.</li>
+              </ul>
+            </div>
+
+            <!-- İnce Ethernet -->
+            <div class="cable-card danger-edge">
+              <div class="cable-header">
+                <span class="cable-title">İnce Ethernet (10BASE-2)</span>
+                <span class="cable-badge badge-red">Thin Coax</span>
+              </div>
+              <ul class="cable-features">
+                <li><strong>Hız:</strong> 10 Mbps | <strong>Maks Mesafe:</strong> ~185 Metre (~200m)</li>
+                <li><strong>Kablo Tipi:</strong> RG-58 ince koaksiyel kablo</li>
+                <li><strong>Avantaj:</strong> Kurulumu ve cihaz eklemesi görece kolaydır.</li>
+                <li><strong class="text-danger">Kritik Zafiyet 1:</strong> Ortak Veri Yayını (Broadcast/Shared Bus) mimarisidir. Ağ kartını dinleme moduna (promiscuous mode) alan herkes tüm trafiği izler!</li>
+                <li><strong class="text-danger">Kritik Zafiyet 2:</strong> Kablo tek bir noktadan koptuğunda veya terminatör ayrıldığında tüm hat çöker!</li>
+              </ul>
+            </div>
+
+            <!-- UTP & STP -->
+            <div class="cable-card">
+              <div class="cable-header">
+                <span class="cable-title">Bükümlü Çift (Twisted Pair)</span>
+                <span class="cable-badge badge-blue">UTP / STP</span>
+              </div>
+              <ul class="cable-features">
+                <li><strong>Büküm Sebebi:</strong> Dış parazitleri ve sinyal karışmasını (crosstalk) sönümlemek.</li>
+                <li><strong>UTP:</strong> Metal kalkanı yoktur. En yaygın olanıdır (10BASE-T için Cat 3, 100BASE-T için Cat 5, RJ-45).</li>
+                <li><strong>STP:</strong> Elektromanyetik parazitleri engelleyen metal folyo/örgü zırh bulunur.</li>
+                <li><strong>Yıldız Topoloji:</strong> Kablo kopması sadece o cihazı etkiler; diğerleri çalışmaya devam eder.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Hub Zafiyetleri Box -->
+          <div class="hub-vulnerability-box mt-md">
+            <h4>⚠️ Katman 1 Cihazı Olarak HUB (Göbek) ve Ağ Zafiyetleri</h4>
+            <p>Hub, Katman 1'de (Fiziksel) çalışan basit bir sinyal tekrarlayıcıdır (repeater). <em>Aptal (Dumb)</em> ve <em>Akıllı (Intelligent - sinyal yenileyen/yönetilebilen)</em> modelleri vardır.</p>
+            
+            <div class="vuln-flow">
+              <div class="flow-item">
+                <span class="flow-step">ZAFİYET 1</span>
+                <strong>Hub kendisine gelen veriyi diğer tüm portlara aynen çoğaltarak basar (Broadcast mantığı).</strong>
+                <div class="flow-consequence">
+                  <span>➡️ Saldırı: Ağ Koklama (Sniffing)</span>
+                  <span>➡️ Tehdit: <strong>Bilgi Sızıntısı (Information Leakage)</strong></span>
+                </div>
+              </div>
+              <div class="flow-item">
+                <span class="flow-step">ZAFİYET 2</span>
+                <strong>Hub üzerinde port güvenliği veya kimlik kontrolü yoktur; boş porta herkes kablo takabilir.</strong>
+                <div class="flow-consequence">
+                  <span>➡️ Saldırı: İzinsiz Cihaz Bağlama</span>
+                  <span>➡️ Tehdit: <strong>Yetkisiz Kullanım (Illegitimate Use)</strong></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4.3 -->
+        <article id="bolum4-3" class="topic-block highlight-section">
+          <div class="exam-header">
+            <span class="exam-icon">💡</span>
+            <div>
+              <h3>3. EN SON İŞLENEN KONU: Fiber Optik ve Kanal/Mod Yapısı</h3>
+              <p class="exam-subtitle">Sınavda en çok soru getirebilecek güncel ve kritik altyapı bölümü</p>
+            </div>
+          </div>
+
+          <!-- A. Genel Özellikler -->
+          <div class="card mb-md">
+            <h4>A. Fiber Optiğin Genel Özellikleri</h4>
+            <ul class="clean-list">
+              <li><strong>İletim Prensibi:</strong> Veriyi elektrik voltajı yerine <strong>ışık sinyalleri (fotonlar)</strong> ile iletir.</li>
+              <li><strong>Kullanım Alanı:</strong> Gigabit Ethernet ve Token Ring ağlarında omurga (backbone) bağlantısı olarak yaygın kullanılır.</li>
+              <li><strong>Bağlantı Mimarisi:</strong> Cihaz ile merkez arasında tekil hat olarak çekilir; araya T-konnektörle ek yapılamaz. Uçlar sadece hat sonlarındadır. Kablonun kopması diğer kullanıcıları etkilemez.</li>
+              <li><strong>Hassasiyet:</strong> Kurulumu ve sonlandırılması (fusion splice vb.) bakır UTP kablolara göre çok daha fazla hassasiyet ve uzmanlık gerektirir.</li>
+            </ul>
+          </div>
+
+          <!-- B. Güvenlik Açısından Fiber Optik -->
+          <div class="card card-glow mb-md">
+            <h4 class="text-accent">B. Güvenlik Açısından Fiber Optik (Sınavın Banko Kısmı!)</h4>
+            <div class="grid-3 mt-sm">
+              <div class="subcard">
+                <h5>🚫 Elektromanyetik Işıma Yok</h5>
+                <p>Bakır kablolar ve radyo dalgaları dışarıya elektromanyetik alan yayarken, fiber optik ışığı cam/plastik çekirdeğin içinde tuttuğu için <strong>dışarıya neredeyse sıfır ışıma yayar</strong> (TEMPEST sızıntısı yoktur).</p>
+              </div>
+              <div class="subcard">
+                <h5>🛡️ Araya Girme (Tapping) Zorluğu</h5>
+                <p>Fiber kabloya araya girip sinyali dinlemek (tap atmak) fiziksel olarak son derece zordur; çok pahalı ve özel optik laboratuvar ekipmanı gerektirir.</p>
+              </div>
+              <div class="subcard">
+                <h5>🚨 Müdahale Anında Fark Edilir</h5>
+                <p>Hatta yapılacak herhangi bir fiziksel müdahale (bükme, kesme, delme) ışığın kırılmasını ve açısını bozduğu için <strong>serviste anında kesintiye (disruption of service)</strong> yol açar ve alarm üretir.</p>
+              </div>
+            </div>
+            <div class="note-box mt-sm">
+              <strong>WAN Karşılaştırması:</strong> Uydu, radyo veya mikrodalga bağlantılar çevreye yoğun ışıma yayar ve dışarıdan kesinti yaratılmadan kolayca dinlenebilir; fiber ise dinlenemezliği ve güvenilirliğiyle tüm bu kablosuz iletim ortamlarından fersah fersah üstündür.
+            </div>
+          </div>
+
+          <!-- C. Tek Mod / Çok Mod ve CWDM -->
+          <div class="card">
+            <h4>C. "Tek Kanal / 4 Kanal Fiber" ve İletim Modları</h4>
+            <p>Derste bahsedilen kavramlar, fiber optiğin iletim modları ve optik dalga boyu çoğullama teknikleridir:</p>
+
+            <div class="grid-2 mt-sm">
+              <div class="mode-box sm-mode">
+                <div class="mode-tag">Tek Modlu (Single-Mode Fiber)</div>
+                <h5>Tek Kanallı / Tek Modlu Işık Yolu</h5>
+                <ul class="bullet-list">
+                  <li><strong>Çekirdek Çapı:</strong> Çok incedir (~9 mikron).</li>
+                  <li><strong>Işık Hareketi:</strong> Işık tek bir doğrultuda, tek bir kanal/yol izleyerek merkezden ilerler.</li>
+                  <li><strong>Dağılma (Dispersion):</strong> Modal dağılma minimumdur.</li>
+                  <li><strong>Kullanım Alanı:</strong> Kilometrelerce uzağa giden uzun mesafeli omurga hatları (WAN / Şehirlerarası / Campus Backbone).</li>
+                </ul>
+              </div>
+
+              <div class="mode-box mm-mode">
+                <div class="mode-tag">Çok Modlu (Multi-Mode Fiber)</div>
+                <h5>Çok Kanallı / Çok Modlu Işık Yolu</h5>
+                <ul class="bullet-list">
+                  <li><strong>Çekirdek Çapı:</strong> Daha kalındır (50 veya 62.5 mikron).</li>
+                  <li><strong>Işık Hareketi:</strong> Işık duvardan duvara farklı açılarla yansıyarak birden fazla modda (kanalda) ilerler.</li>
+                  <li><strong>Dağılma (Dispersion):</strong> Mesafe uzadıkça ışık modları birbiriyle karışır (modal dispersion).</li>
+                  <li><strong>Kullanım Alanı:</strong> Kısa mesafeli bina içi ve veri merkezi içi (LAN / SAN) bağlantıları.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- CWDM / WDM 4 Kanal Açıklaması -->
+            <div class="wdm-box mt-md">
+              <div class="wdm-badge">Optik Çoğullama Teknolojisi</div>
+              <h4>WDM ve 4-Kanal (CWDM/DWDM) Yapısı Nedir?</h4>
+              <p>Tek bir cam tel içerisinden birden fazla bağımsız veri kanalını aynı anda geçirmek için <strong>WDM (Wavelength Division Multiplexing - Dalga Boyu Bölmeli Çoğullama)</strong> kullanılır.</p>
+              <div class="wdm-visual">
+                <span class="fiber-lambda l1">λ1 (Mavi Işık Kanalı - 10G/25G)</span>
+                <span class="fiber-lambda l2">λ2 (Yeşil Işık Kanalı - 10G/25G)</span>
+                <span class="fiber-lambda l3">λ3 (Sarı Işık Kanalı - 10G/25G)</span>
+                <span class="fiber-lambda l4">λ4 (Kırmızı Işık Kanalı - 10G/25G)</span>
+              </div>
+              <p class="mt-sm">Işık farklı renklere (farklı nanometre dalga boylarına) ayrılarak aynı kabloya basılır. Örneğin optik alıcı-vericilerde (transceiver) <strong>4 kanallı yapı</strong> (4 x 10G veya 4 x 25G CWDM şeritleri) kullanılarak tek bir hat üzerinden <strong>40G veya 100G</strong> yüksek hızlar paralel olarak taşınır.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ==================== HIZLI SINAV KONTROL LİSTESİ ==================== -->
+      <section id="sinav-ozeti" class="content-section exam-checklist-section">
+        <div class="section-header">
+          <span class="section-number">ÖZET & TEKRAR</span>
+          <h2>⚡ Sınava Yönelik Hızlı Kontrol Listesi</h2>
+        </div>
+
+        <div class="checklist-grid">
+          <div class="check-item done">
+            <span class="check-box">✔</span>
+            <div class="check-content">
+              <strong>OSI Katman 1:</strong>
+              <p>Ham bit iletimi, elektrik/optik sinyaller, voltajlar, konektörler ve duplex modlar.</p>
+            </div>
+          </div>
+
+          <div class="check-item done">
+            <span class="check-box">✔</span>
+            <div class="check-content">
+              <strong>ISO 7498-2 Güvenlik Kuralı:</strong>
+              <p>Fiziksel katmanda yalnızca <em>Bağlantı Gizliliği</em> ve <em>Trafik Akış Gizliliği</em> sağlanabilir; kimlik doğrulama veya bütünlük denetimi Katman 1'de yapılamaz!</p>
+            </div>
+          </div>
+
+          <div class="check-item done">
+            <span class="check-box">✔</span>
+            <div class="check-content">
+              <strong>Thin Ethernet (10BASE-2):</strong>
+              <p>Ortak veri yayını (broadcast bus mimarisi), dinleme (sniffing) riski çok yüksek, tek noktadan kablo koparsa tüm hat çöker.</p>
+            </div>
+          </div>
+
+          <div class="check-item done">
+            <span class="check-box">✔</span>
+            <div class="check-content">
+              <strong>UTP & Hub Mimarisi:</strong>
+              <p>Yıldız topolojide kablo koparsa tek kullanıcı etkilenir. Fakat Hub tüm trafiği körü körüne herkese bastığı için bilgi sızıntısı ve yetkisiz erişim riski üretir.</p>
+            </div>
+          </div>
+
+          <div class="check-item done">
+            <span class="check-box">✔</span>
+            <div class="check-content">
+              <strong>Fiber Optik Üstünlüğü:</strong>
+              <p>Işıkla iletim, sıfıra yakın elektromanyetik sızıntı, araya girip dinlemek (tap) son derece zor, hatta müdahale anında servis kesintisi yaratarak kendini belli eder.</p>
+            </div>
+          </div>
+
+          <div class="check-item done">
+            <span class="check-box">✔</span>
+            <div class="check-content">
+              <strong>Tek Mod vs. Çok Mod & WDM:</strong>
+              <p>Tek mod (ince çekirdek, lazer, uzun mesafe, tek yol). Çok mod (kalın çekirdek, kısa mesafe, çoklu yansıma). CWDM/WDM: Farklı dalga boyları (renkler) ile tek kablodan 4 kanal (40G/100G) taşıma.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Bilgisayar Ağları ve Güvenliği Çalışma Rehberi • Hazırlayan: Antigravity AI</p>
+      <div class="footer-links">
+        <a href="#bolum1">Bölüm 1</a>
+        <a href="#bolum2">Bölüm 2</a>
+        <a href="#bolum3">Bölüm 3</a>
+        <a href="#bolum4">Bölüm 4</a>
+        <a href="#sinav-ozeti">Sınav Özeti</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
