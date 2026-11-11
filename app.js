@@ -4,32 +4,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeToggle = document.getElementById('themeToggle');
   const savedTheme = localStorage.getItem('theme') || 'dark';
   
-  if (savedTheme === 'light') {
-    document.documentElement.setAttribute('data-theme', 'light');
-    themeToggle.textContent = '☀️';
-  } else {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    themeToggle.textContent = '🌙';
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
   }
+
+  applyTheme(savedTheme);
 
   themeToggle.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    themeToggle.textContent = newTheme === 'light' ? '☀️' : '🌙';
+    applyTheme(currentTheme === 'light' ? 'dark' : 'light');
   });
 
-  // Print button
-  const printBtn = document.getElementById('printBtn');
-  if (printBtn) {
-    printBtn.addEventListener('click', () => {
-      window.print();
-    });
+  // Mobile Drawer Navigation
+  const menuToggle = document.getElementById('menuToggle');
+  const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+  const sidebarDrawer = document.getElementById('sidebarDrawer');
+  const drawerBackdrop = document.getElementById('drawerBackdrop');
+
+  function openDrawer() {
+    sidebarDrawer.classList.add('open');
+    drawerBackdrop.classList.add('active');
+    document.body.style.overflow = 'hidden';
   }
 
-  // Reading progress bar
+  function closeDrawer() {
+    sidebarDrawer.classList.remove('open');
+    drawerBackdrop.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  if (menuToggle) menuToggle.addEventListener('click', openDrawer);
+  if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
+  if (drawerBackdrop) drawerBackdrop.addEventListener('click', closeDrawer);
+
+  // Close drawer when any TOC link is clicked on mobile
+  document.querySelectorAll('.toc-link, .toc-sub a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 991) {
+        closeDrawer();
+      }
+    });
+  });
+
+  // Reading Progress Bar
   const progressBar = document.getElementById('progressBar');
   window.addEventListener('scroll', () => {
     const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -37,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const progress = (window.scrollY / totalHeight) * 100;
       progressBar.style.width = `${progress}%`;
     }
-  });
+  }, { passive: true });
 
   // Active TOC Link on Scroll
   const sections = document.querySelectorAll('section[id], article[id]');
@@ -45,9 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', () => {
     let current = '';
+    const scrollPos = window.scrollY + 140;
+
     sections.forEach(section => {
-      const sectionTop = section.offsetTop - 120;
-      if (window.scrollY >= sectionTop) {
+      if (scrollPos >= section.offsetTop) {
         current = section.getAttribute('id');
       }
     });
@@ -58,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         link.classList.add('active');
       }
     });
-  });
+  }, { passive: true });
 
   // Real-time Search
   const searchInput = document.getElementById('searchInput');
@@ -76,21 +96,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     topicBlocks.forEach(el => {
       const text = el.textContent.toLowerCase();
-      if (text.includes(query)) {
-        el.style.display = '';
-      } else {
-        el.style.display = 'none';
-      }
+      el.style.display = text.includes(query) ? '' : 'none';
     });
   });
 
-  // Smooth scroll click for TOC links
+  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-      e.preventDefault();
       const targetId = this.getAttribute('href').substring(1);
       const targetElement = document.getElementById(targetId);
       if (targetElement) {
+        e.preventDefault();
         targetElement.scrollIntoView({
           behavior: 'smooth'
         });
